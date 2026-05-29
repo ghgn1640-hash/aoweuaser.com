@@ -1,0 +1,446 @@
+# aowuaser.com <!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TỔNG HÀNH DINH MẬT MÃ TỐI CAO - SYSTEM v4.0</title>
+    <style>
+        /* TOÀN BỘ GIAO DIỆN PHONG CÁCH MA TRẬN HACKER */
+        body {
+            background-color: #030303;
+            color: #00ff66;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* NÚT MENU 3 GẠCH GÓC TRÁI */
+        .menu-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 30px;
+            background: none;
+            border: none;
+            color: #00ffff;
+            cursor: pointer;
+            z-index: 1000;
+            text-shadow: 0 0 10px #00ffff;
+            transition: 0.3s;
+        }
+        .menu-btn:hover {
+            color: #ff0055;
+            transform: scale(1.1);
+        }
+
+        /* NGĂN KÉO SIDEBAR BÊN TRÁI */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 260px;
+            height: 100%;
+            background: #090909;
+            border-right: 2px solid #00ffff;
+            transition: 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+            padding: 20px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 5px 0 25px rgba(0, 255, 255, 0.15);
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar-title {
+            color: #00ffff;
+            font-size: 20px;
+            text-align: center;
+            border-bottom: 2px solid #00ff66;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        .sidebar-menu-items {
+            margin-top: 20px;
+            color: #888;
+            font-size: 13px;
+            line-height: 2.2;
+        }
+        .sidebar-menu-items span {
+            color: #00ff66;
+            font-weight: bold;
+        }
+
+        /* VÙNG BÍ MẬT TÚT DƯỚI ĐÁY NGĂN KÉO */
+        .secret-trigger {
+            padding: 15px;
+            border-top: 1px dashed #222;
+            color: #0a0a0a; /* Gần như tàng hình hoàn toàn */
+            cursor: pointer;
+            text-align: center;
+            font-size: 11px;
+            user-select: none;
+            transition: 0.3s;
+        }
+        .secret-trigger:hover {
+            color: #1a1a1a;
+            background: #050505;
+        }
+
+        /* KHUNG CHỨA CHÍNH VÀ TIÊU ĐỀ */
+        .main-wrapper {
+            max-width: 700px;
+            margin: 70px auto 30px auto;
+            padding: 20px;
+        }
+        .header-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header-title h1 {
+            margin: 0;
+            font-size: 26px;
+            text-shadow: 0 0 15px #00ff66;
+        }
+        .header-title p {
+            color: #888;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        /* PANEL HỆ THỐNG */
+        .panel {
+            background: #0d0d0d;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .panel-public { border-color: #00ffff; box-shadow: 0 0 10px rgba(0, 255, 255, 0.1); }
+        .panel-secret { border-color: #ff0055; box-shadow: 0 0 10px rgba(255, 0, 85, 0.1); }
+        
+        .panel-h3 {
+            margin-top: 0;
+            font-size: 16px;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        .title-pub { color: #00ffff; }
+        .title-sec { color: #ff0055; }
+
+        /* THANH TÌM KIẾM VÀ KHUNG INPUT */
+        .custom-input {
+            width: 94%;
+            padding: 12px;
+            background: #000;
+            color: #fff;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+        .input-pub { border: 1px solid #00ffff; }
+        .input-pub:focus { outline: none; box-shadow: 0 0 8px #00ffff; }
+        .input-sec { border: 1px solid #ff0055; }
+        .input-sec:focus { outline: none; box-shadow: 0 0 8px #ff0055; }
+
+        /* NÚT BẤM */
+        .btn {
+            padding: 10px 20px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            margin: 5px;
+            transition: 0.2s;
+        }
+        .btn-pub { background: #00ffff; color: #000; }
+        .btn-pub:hover { background: #fff; box-shadow: 0 0 8px #fff; }
+        .btn-sec { background: #ff0055; color: #fff; }
+        .btn-sec:hover { background: #33ff33; color: #000; box-shadow: 0 0 8px #33ff33; }
+
+        /* DANH SÁCH HIỂN THỊ KÝ TỰ ĐÁNH SỐ NHANH */
+        .list-container {
+            max-height: 220px;
+            overflow-y: auto;
+            background: #050505;
+            border: 1px solid #222;
+            padding: 5px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #111;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .list-item:hover {
+            background: #111;
+        }
+        .badge-id {
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 2px;
+        }
+        .badge-pub { background: #00ffff; color: #000; }
+        .badge-sec { background: #ff0055; color: #fff; }
+        
+        .item-name {
+            margin-left: 10px;
+            font-size: 12px;
+            color: #888;
+        }
+        .char-render {
+            font-size: 20px;
+            color: #00ff66;
+            font-weight: bold;
+        }
+
+        /* PHẦN ĐIỀU KHIỂN CHUYỂN ĐỔI GIAO DIỆN BỊ ẨN */
+        #secretZone {
+            display: none;
+        }
+
+        /* ĐIỀU CHỈNH THANH CUỘN CHO ĐẸP */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff0055; }
+    </style>
+</head>
+<body>
+
+    <button class="menu-btn" onclick="toggleSidebarControl()">☰</button>
+
+    <div class="sidebar" id="sidebarMenu">
+        <div>
+            <div class="sidebar-title">LOC CORE SYSTEM</div>
+            <div class="sidebar-menu-items">
+                <p>• Trạng thái: <span>ONLINE</span></p>
+                <p>• Phiên bản: <span>v4.0 MaxMin</span></p>
+                <p>• Chế độ công khai: <span>ACTIVE</span></p>
+                <p>• Bộ lọc mã ID nhanh: <span>SẴN SÀNG</span></p>
+                <p>• Chống sao chép Google: <span>ĐANG BẬT</span></p>
+            </div>
+        </div>
+        
+        <div class="secret-trigger" onclick="kichHoatMatDaoNgam()">[ SYSTEM EMPTY ]</div>
+    </div>
+
+    <div class="main-wrapper">
+        
+        <div id="publicZone">
+            <div class="header-title">
+                <h1 style="color: #00ffff; text-shadow: 0 0 10px #00ffff;">🔍 HỆ THỐNG KÝ TỰ ĐẶC BIỆT CÔNG KHAI</h1>
+                <p>Tìm kiếm nhanh theo tên hoặc mã ID. Bấm vào dòng ký tự để tự động sao chép.</p>
+            </div>
+
+            <div class="panel panel-public">
+                <div class="panel-h3 title-pub">⌨️ BỘ TRA CỨU SIÊU TỐC</div>
+                <input type="text" id="pubSearchBar" class="custom-input input-pub" oninput="executePubSearch()" placeholder="Gõ tên ký tự, mã số ID hoặc dán ký tự vào để tìm...">
+                <div style="font-size:11px; color:#00ffff; text-align:left; margin-left:5px;" id="pubStatus">Dữ liệu công khai ổn định.</div>
+                
+                <div class="list-container" id="pubLayoutList"></div>
+            </div>
+        </div>
+
+
+        <div id="secretZone">
+            <div class="header-title">
+                <h1 style="color: #ff0055; text-shadow: 0 0 10px #ff0055;">☣️ CĂN CỨ ĐÚC KÝ TỰ TỐI MẬT - TRÙM LOC</h1>
+                <p>Hệ thống tự động liên kết dữ liệu cổ đại, đánh số ID siêu tốc và chống sạc dữ liệu.</p>
+            </div>
+
+            <div class="panel panel-secret">
+                <div class="panel-h3 title-sec">🔒 BỘ TRUY XUẤT NGẦM & NHẬN DIỆN NGƯỢC DỮ LIỆU</div>
+                <input type="text" id="secSearchBar" class="custom-input input-sec" oninput="executeSecSearch()" placeholder="Tìm kiếm mã cấm #S01, tên ngầm hoặc dán ký tự hệ thống vào...">
+                <div style="font-size:11px; color:#ff0055; text-align:left; margin-left:5px;" id="secStatus">Phòng thí nghiệm đang khóa mã bảo mật.</div>
+            </div>
+
+            <div class="panel panel-secret">
+                <div class="panel-h3 title-sec">📦 KHO HÀNG CẤM HOÀNG GIA & TRẠM BƠM ID TỰ ĐỘNG</div>
+                
+                <div class="list-container" id="secLayoutList"></div>
+                
+                <br>
+                <div style="text-align: center;">
+                    <button class="btn btn-sec" onclick="injectNewSecretChar()">BƠM THÊM KÝ TỰ CHƯA AI CÓ</button>
+                    <button class="btn btn-pub" onclick="khoaHeThongNgam()">KHÓA KHẨN CẤP</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 1. KHO CƠ SỞ DỮ LIỆU CÔNG KHAI (Mặt tiền ngụy trang) ---
+        let databaseCongKhai = [
+            { id: "#P01", name: "canh vuong mien chien than", char: "꧁༺亗 LOC 亗༻꧂" },
+            { id: "#P02", name: "vong xoay thoi mien dau lau", char: "𖦹☠ LOC ☠𖦹" },
+            { id: "#P03", name: "khung chu hacker doc chiêu", char: "〔 LOC 〕亗" },
+            { id: "#P04", name: "chu quyu am zalgo moc gai", char: "L̸͒̏͑ Ö̶̉͌͝ C̶͚̈̉͌̔̚͝" },
+            { id: "#P05", name: "huy hieu radar hoa van co", char: "𖡹𖣔 LOC 𖣔𖡹" },
+            { id: "#P06", name: "doi canh thien than bong toi", char: "༺☠ LOC ☠༻" },
+            { id: "#P07", name: "mat xich cong nghe tuong lai", char: "⛓️ LOC ⛓️" }
+        ];
+
+        // --- 2. KHO CƠ SỞ DỮ LIỆU TỐI MẬT (Hàng độc quyền trong mật đạo 8386) ---
+        let databaseBiMat = [
+            { id: "#S01", name: "vi mach babylon co sieu ngoan ngoeo", char: "𒀱𒈓LOC𒈓𒀱" },
+            { id: "#S02", name: "mat than horus phong an phong kien", char: "𓁹𓆗LOC𓆗𓁹" },
+            { id: "#S03", name: "ma tran bon con rong xep chong dat", char: "𪚥𓃿LOC𓃿𪚥" },
+            { id: "#S04", name: "luoi dien tu xuyen thau chu co đại", char: "儸𒁏LOC𒁏儸" },
+            { id: "#S05", name: "vong xoay nang luong ngoi sao an bieu", char: "𖦹𓇽LOC𓇽𖦹" }
+        ];
+
+        // Đóng mở thanh ngăn kéo Sidebar
+        function toggleSidebarControl() {
+            document.getElementById("sidebarMenu").classList.toggle("active");
+        }
+
+        // KÍCH HOẠT MẬT ĐẠO NGẦM BẰNG MẬT MÃ 8386
+        function kichHoatMatDaoNgam() {
+            // Hộp thoại hiện lên hoàn toàn trống không theo yêu cầu
+            var codeKichHoat = prompt("Nhập mã kích hoạt hệ thống ngầm:");
+            
+            if (codeKichHoat === "8386") {
+                alert("Mật mã chính xác! Đang kết nối tổng hành dinh tối mật LOC... 🚀");
+                
+                // Ẩn mặt tiền công khai, hiện căn cứ ngầm lên
+                document.getElementById("publicZone").style.display = "none";
+                document.getElementById("secretZone").style.display = "block";
+                
+                toggleSidebarControl(); // Đóng ngăn kéo tự động cho ngầu
+                renderDatabaseLayout(databaseBiMat, "secLayoutList", true); // Tải kho hàng ngầm
+            } else {
+                alert("Truy cập thất bại! Hệ thống tự động khóa.");
+            }
+        }
+
+        // HÀM KHÓA KHẨN CẤP (Xóa dấu vết quay về công khai)
+        function khoaHeThongNgam() {
+            document.getElementById("secretZone").style.display = "none";
+            document.getElementById("publicZone").style.display = "block";
+            alert("Đã khóa căn cứ bảo mật! Quay lại chế độ ngụy trang công khai.");
+        }
+
+        // HÀM XUẤT DỮ LIỆU LÊN GIAO DIỆN CHUNG (ĐÚC RA BẢNG DANH SÁCH)
+        function renderDatabaseLayout(dataSource, targetContainerId, isSecretMode) {
+            const container = document.getElementById(targetContainerId);
+            container.innerHTML = ""; // Xóa dữ liệu cũ để cập nhật dữ liệu mới
+
+            dataSource.forEach(item => {
+                let itemDiv = document.createElement("div");
+                itemDiv.className = "list-item";
+                
+                // Cài đặt tính năng bấm vào dòng là tự sao chép tự động ở bất cứ đâu
+                itemDiv.onclick = () => {
+                    navigator.clipboard.writeText(item.char);
+                    alert("Đã sao chép mật mã thành công: " + item.char + " 🚀 Thả xích đi troll thôi! He he.");
+                };
+
+                let badgeColorClass = isSecretMode ? "badge-id badge-sec" : "badge-id badge-pub";
+                
+                itemDiv.innerHTML = `
+                    <div>
+                        <span class="${badgeColorClass}">${item.id}</span>
+                        <span class="item-name">${item.name}</span>
+                    </div>
+                    <div class="char-render">${item.char}</div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+
+        // TÍNH NĂNG 1: TÌM KIẾM NHANH CÔNG KHAI (MẶT TIỀN)
+        function executePubSearch() {
+            let filterKeyword = document.getElementById("pubSearchBar").value.toLowerCase().trim();
+            
+            if (filterKeyword === "") {
+                renderDatabaseLayout(databaseCongKhai, "pubLayoutList", false);
+                document.getElementById("pubStatus").innerText = "Dữ liệu công khai ổn định.";
+                return;
+            }
+
+            // Bộ lọc đa năng: Khớp mã số ID, Khớp tên gọi hoặc Khớp chính xác ký tự dán vào
+            let processedResult = databaseCongKhai.filter(item => {
+                return item.id.toLowerCase().includes(filterKeyword) || 
+                       item.name.toLowerCase().includes(filterKeyword) || 
+                       item.char.toLowerCase().includes(filterKeyword);
+            });
+
+            renderDatabaseLayout(processedResult, "pubLayoutList", false);
+            document.getElementById("pubStatus").innerHTML = `<span style="color:#00ffff">Đã tìm thấy ${processedResult.length} ký tự khớp lệnh!</span>`;
+        }
+
+        // TÍNH NĂNG 2: TÌM KIẾM NGẦM & NHẬN DIỆN NGƯỢC (TRONG CĂN CỨ 8386)
+        function executeSecSearch() {
+            let filterKeyword = document.getElementById("secSearchBar").value.toLowerCase().trim();
+            
+            if (filterKeyword === "") {
+                renderDatabaseLayout(databaseBiMat, "secLayoutList", true);
+                document.getElementById("secStatus").innerText = "Phòng thí nghiệm đang mở khóa.";
+                return;
+            }
+
+            // Quét ngược dữ liệu nâng cao
+            let processedResult = databaseBiMat.filter(item => {
+                return item.id.toLowerCase().includes(filterKeyword) || 
+                       item.name.toLowerCase().includes(filterKeyword) || 
+                       item.char.toLowerCase().includes(filterKeyword);
+            });
+
+            renderDatabaseLayout(processedResult, "secLayoutList", true);
+            document.getElementById("secStatus").innerHTML = `<span style="color:#ff0055">Bộ quét ngầm phát hiện ${processedResult.length} mật mã tối mật!</span>`;
+        }
+
+        // TÍNH NĂNG 3: TRẠM BƠM TỰ ĐỘNG - TỰ PHỐI CHỮ CHƯA AI TẠO ĐƯỢC
+        function injectNewSecretChar() {
+            // Tự động cấp số ID nhanh tiếp theo
+            let nextNum = databaseBiMat.length + 1;
+            let generatedId = "#S" + String(nextNum).padStart(2, '0');
+            
+            // Kho phôi chữ siêu ngoằn ngoèo để tự đúc tổ hợp
+            let phoiDau = ["𒅒", "𪚥", "𓂺", "𒁂", "𖡹", "𒁱"];
+            let phoiDuoi = ["𒆙", "𓃿", "𓇽", "𒈔", "𖣔", "𒁏"];
+            let nhãnTen = ["vi mach quai di", "nguyen rua huyen bi", "ma tran vo tan", "radar cam he thong", "loi ma hoa can cu"];
+            
+            let rdDau = phoiDau[Math.floor(Math.random() * phoiDau.length)];
+            let rdDuoi = phoiDuoi[Math.floor(Math.random() * phoiDuoi.length)];
+            let rdTen = nhãnTen[Math.floor(Math.random() * nhãnTen.length)];
+            
+            // Đúc chuỗi ký tự độc nhất vô nhị bao quanh LOC
+            let finalCharString = rdDau + rdDuoi + "LOC" + rdDuoi + rdDau;
+            
+            let objectMoi = {
+                id: generatedId,
+                name: rdTen + " " + generatedId,
+                char: finalCharString
+            };
+            
+            // Bơm dữ liệu thẳng vào bộ nhớ hệ thống
+            databaseBiMat.push(objectMoi);
+            executeSecSearch(); // Cập nhật làm mới giao diện ngay lập tức
+            
+            alert(`Đã bơm thành công siêu ký tự độc quyền ${generatedId} vào trạm lưu trữ! He he.`);
+        }
+
+        // TỰ ĐỘNG CHẠY TẢI DANH SÁCH CÔNG KHAI KHI VỪA MỞ TRANG WEB
+        renderDatabaseLayout(databaseCongKhai, "pubLayoutList", false);
+    </script>
+</body>
+</html>

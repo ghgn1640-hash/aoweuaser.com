@@ -1,1 +1,0 @@
-# aoweuaser.com
